@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdbool.h>
-#include <unistd.h> // Para usleep()
-#include "driver/gpio.h" // Para funciones GPIO
-#include "esp_log.h"    // Para logging
+#include <unistd.h> 
+#include "driver/gpio.h" 
+#include "esp_log.h"    
 
 // Definición de pines
 #define PIN_BOTON_ABRIR     GPIO_NUM_2
