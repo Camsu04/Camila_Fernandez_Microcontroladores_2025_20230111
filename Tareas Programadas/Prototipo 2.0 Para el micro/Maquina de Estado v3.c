@@ -183,7 +183,6 @@ void leerBotones() {
 
 // Función para manejar el estado de falla
 void manejarFalla() {
-    printf("¡FALLA DETECTADA! Bombillo parpadeando...\n");
     cnt_led_falla = 0; // Reiniciar el contador de parpadeo
     fallaDetectada = false; // Reinicia la falla después de manejarla
 }
