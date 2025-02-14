@@ -187,7 +187,7 @@ void manejarFalla() {
     fallaDetectada = false; // Reinicia la falla después de manejarla
 }
 
-// Función para simular el parpadeo del bombillo
+// Función el parpadeo del bombillo
 void Timer50ms() {
     cnt_led_falla++;
     if (cnt_led_falla >= PARPADEO_LENTO) {
