@@ -29,7 +29,7 @@ EstadoPuerta estadoActual = ESPERA;
 bool hayObstaculo = false;
 bool fallaDetectada = false;
 static unsigned int cnt_led_falla = 0;
-#define PARPADEO_LENTO 10 // Cada 500ms * 10 = 5 segundos
+#define PARPADEO_LENTO 10  
 
 // Prototipos de funciones
 void setupPines();
