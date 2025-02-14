@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <unistd.h> 
-#include "driver/gpio.h" 
+#include "driver/gpio.h" // Para funciones GPIO
 
 // Definición de pines
 #define PIN_BOTON_ABRIR     GPIO_NUM_2
@@ -48,6 +48,7 @@ int main() {
         Timer50ms();
         manejarEventos();
         mostrarEstado();
+        // Simulación de tiempo entre iteraciones
         usleep(500000); // 0.5 segundos
     }
     return 0;
@@ -77,7 +78,7 @@ void manejarEventos() {
     switch (estadoActual) {
         case ESPERA:
             if (gpio_get_level(PIN_BOTON_ABRIR) == 0) {
-                printf("Iniciando apertura...\n");
+                printf("Botón 'Abrir' presionado.\n");
                 estadoActual = ABRIENDO;
                 delaySegundos(5);
                 estadoActual = ABIERTA;
@@ -90,10 +91,14 @@ void manejarEventos() {
             gpio_set_level(PIN_LED_FALLA, 0);  // Apagar LED FALLA
             break;
         case ABIERTA:
+            if (gpio_get_level(PIN_BOTON_CERRAR) == 0) {
+                printf("Botón 'Cerrar' presionado.\n");
+                estadoActual = CERRANDO;
+                delaySegundos(5);
+                estadoActual = CERRADA;
+            }
             gpio_set_level(PIN_LED_ESTADO, 1); // Encender LED ESTADO
             gpio_set_level(PIN_LED_FALLA, 0);  // Apagar LED FALLA
-            delaySegundos(2);
-            estadoActual = CERRANDO;
             break;
         case CERRANDO:
             gpio_set_level(PIN_LED_ESTADO, 0); // Apagar LED ESTADO
@@ -108,8 +113,7 @@ void manejarEventos() {
             gpio_set_level(PIN_LED_FALLA, 0);  // Apagar LED FALLA
             break;
         case REVERSA:
-            gpio_set_level(PIN_LED_ESTADO, 1); // Encender LED ESTADO
-            gpio_set_level(PIN_LED_FALLA, 0);  // Apagar LED FALLA
+            printf("Reversa activada. Abriendo puerta...\n");
             delaySegundos(3);
             estadoActual = ABIERTA;
             break;
@@ -192,6 +196,7 @@ void leerBotones() {
 
 // Función para manejar el estado de falla
 void manejarFalla() {
+    printf("¡FALLA DETECTADA! Bombillo parpadeando...\n");
     cnt_led_falla = 0; // Reiniciar el contador de parpadeo
     fallaDetectada = false; // Reinicia la falla después de manejarla
 }
