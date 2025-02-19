@@ -10,7 +10,7 @@
 #include "esp_log.h"
 #include "mqtt_client.h"
 
-//--------DEFINE DEL PORTÓN--------/
+//--------DEFINE DE LA PUERTA--------/
 #define INIT 0
 #define CLOSED 1
 #define OPEN 2
@@ -24,7 +24,7 @@
 #define RT_MAX 180
 #define OP_TIME 60
 
-//--------VARIABLES DEL PORTÓN--------/
+//--------VARIABLES DE LA PUERTA--------/
 int prev_state = INIT;
 int curr_state = INIT;
 int next_state = INIT;
@@ -32,7 +32,7 @@ int next_state = INIT;
 bool mqtt_connected = false;
 
 
-//--------ESTRUCTURA DEL PORTÓN--------/
+//--------ESTRUCTURA DE LA PUERTA--------/
 struct DATA
 {
     unsigned int LSC:1;     //LS Cerrado
@@ -63,7 +63,6 @@ static void log_error_if_nonzero(const char *message, int error_code)
         ESP_LOGE(TAG, "Last error %s: 0x%x", message, error_code);
     }
 }
-
 
 /*
  * @brief Event handler registered to receive MQTT events
@@ -149,7 +148,7 @@ static void mqtt5_app_start(void)
 
 }
 
-/*--------FUNCIONES PORTON--------*/
+//--------FUNCIONES DE LA PUERTA--------//
 int initFunc (void) {
     prev_state == INIT;
     curr_state == INIT;
@@ -280,7 +279,7 @@ void app_main(void)
 
     mqtt5_app_start();
 
-    /*--------LED CHECK--------*/
+    //--------LED--------/
     data.ledG = TRUE;
     data.ledR = TRUE;
     data.ledO = TRUE;
@@ -289,7 +288,7 @@ void app_main(void)
     data.ledR = FALSE;
     data.ledO = FALSE;
 
-    /*--------MÁQUINA DE ESTADO--------*/
+    //--------MÁQUINA DE ESTADO--------/
     
     while(1) {
         if (next_state == INIT) {
