@@ -10,7 +10,7 @@
 #include "esp_log.h"
 #include "mqtt_client.h"
 
-/--------DEFINE DEL PORTÓN--------/
+//--------DEFINE DEL PORTÓN--------/
 #define INIT 0
 #define CLOSED 1
 #define OPEN 2
@@ -24,7 +24,7 @@
 #define RT_MAX 180
 #define OP_TIME 60
 
-/--------VARIABLES DEL PORTÓN--------/
+//--------VARIABLES DEL PORTÓN--------/
 int prev_state = INIT;
 int curr_state = INIT;
 int next_state = INIT;
@@ -32,7 +32,7 @@ int next_state = INIT;
 bool mqtt_connected = false;
 
 
-/--------ESTRUCTURA DEL PORTÓN--------/
+//--------ESTRUCTURA DEL PORTÓN--------/
 struct DATA
 {
     unsigned int LSC:1;     //LS Cerrado
