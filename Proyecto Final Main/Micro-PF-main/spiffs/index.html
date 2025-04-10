@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emulador de NE555</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #ffffff;
+            /* Fondo blanco */
+            color: #000000;
+            /* Texto negro */
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #e0f7fa;
+            /* Azul claro */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 255, 0.2);
+            /* Sombra azul suave */
+        }
+
+        h1 {
+            color: #d32f2f;
+            /* Título en rojo */
+        }
+
+        h2 {
+            color: #0288d1;
+            /* Subtítulos en azul oscuro */
+        }
+
+        button {
+            display: inline-block;
+            background: #d32f2f;
+            /* Botones en rojo */
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            margin: 10px;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #b71c1c;
+            /* Efecto hover en rojo más oscuro */
+        }
+
+        label {
+            color: #0288d1;
+            /* Etiquetas en azul oscuro */
+        }
+
+        input,
+        select {
+            padding: 5px;
+            margin: 5px 0;
+            border: 1px solid #d32f2f;
+            /* Bordes de entrada en rojo */
+            border-radius: 5px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Emulador de NE555</h1>
+
+    <!-- Sección de selección de modo -->
+    <div class="container">
+        <h2>Selecciona el Modo:</h2>
+        <button onclick="mostrarModo('monoastable')">Modo Monoastable</button>
+        <button onclick="mostrarModo('astable')">Modo Astable</button>
+        <button onclick="mostrarModo('pwm')">Modo PWM</button>
+    </div>
+
+    <!-- Sección Modo Monoastable -->
+    <div id="monoastable" class="container hidden">
+        <h2>Modo Monoastable</h2>
+        <img src="monoastable_circuit.png" alt="Circuito Monoastable NE555" style="max-width: 100%; height: auto;">
+        <label>Resistencia (R1):</label><br>
+        <input type="number" id="resistencia" placeholder="Valor"><br>
+        <select id="unidad_resistencia">
+            <option value="1">Ω</option>
+            <option value="1000">kΩ</option>
+        </select><br>
+        <label>Capacitancia (C):</label><br>
+        <input type="number" step="any" id="capacitancia" placeholder="Valor"><br>
+        <select id="unidad_capacitancia">
+            <option value="1e-9">nF</option>
+            <option value="1e-6">µF</option>
+        </select><br>
+        <button onclick="calcularTiempo()">Calcular</button>
+        <p><strong>Duración del Pulso (T):</strong> <span id="resultado">-</span> segundos</p>
+    </div>
+
+    <!-- Sección Modo Astable -->
+    <div id="astable" class="container hidden">
+        <h2>Modo Astable</h2>
+        <img src="astable_circuit.png" alt="Circuito Astable NE555" style="max-width: 100%; height: auto;">
+        <label>Resistencia (R1):</label><br>
+        <input type="number" id="resistencia1" placeholder="Valor"><br>
+        <label>Resistencia (R2):</label><br>
+        <input type="number" id="resistencia2" placeholder="Valor"><br>
+        <label>Capacitancia (C):</label><br>
+        <input type="number" step="any" id="capacitanciaA" placeholder="Valor"><br>
+        <button onclick="calcularAstable()">Calcular</button>
+        <p><strong>Frecuencia (f):</strong> <span id="frecuencia">-</span> Hz</p>
+        <p><strong>Ciclo de Trabajo (D):</strong> <span id="ciclo">-</span> %</p>
+    </div>
+
+    <!-- Sección Modo PWM -->
+    <!-- Sección Modo PWM -->
+    <div id="pwm" class="container hidden">
+        <h2>Modo PWM</h2>
+        <img src="data:image/png;base64,[cadena_base64_modo_pwm]" alt="Circuito PWM NE555"
+            style="max-width: 100%; height: auto;">
+
+        <!-- Resistencia Variable -->
+        <label>Resistencia Variable (Rv):</label><br>
+        <input type="number" id="resistenciaPWM" placeholder="Valor"><br>
+        <select id="unidad_resistenciaPWM">
+            <option value="1">Ω</option>
+            <option value="1000">kΩ</option>
+        </select><br>
+
+        <!-- Resistencia Fija -->
+        <label>Resistencia Fija (Rf):</label><br>
+        <input type="number" id="resistenciaFija" placeholder="Valor"><br>
+        <select id="unidad_resistenciaFija">
+            <option value="1">Ω</option>
+            <option value="1000">kΩ</option>
+        </select><br>
+
+        <!-- Capacitor Fijo -->
+        <label>Capacitor Fijo (C):</label><br>
+        <input type="number" step="any" id="capacitorFijo" placeholder="Valor" value="1" readonly><br>
+        <select id="unidad_capacitorFijo" disabled>
+            <option value="1e-9">nF</option>
+            <option value="1e-6" selected>µF</option>
+        </select><br>
+
+        <!-- Botón de cálculo -->
+        <button onclick="calcularPWM()">Calcular</button>
+
+        <!-- Resultados -->
+        <p><strong>Frecuencia (f):</strong> <span id="frecuenciaPWM">-</span> Hz</p>
+        <p><strong>Ciclo de Trabajo (Duty Cycle):</strong> <span id="dutyCycle">-</span> %</p>
+    </div>
+
+    <script>
+        function mostrarModo(modo) {
+            // Ocultar todas las secciones
+            document.getElementById("monoastable").classList.add("hidden");
+            document.getElementById("astable").classList.add("hidden");
+            document.getElementById("pwm").classList.add("hidden");
+
+            // Mostrar solo la sección seleccionada
+            document.getElementById(modo).classList.remove("hidden");
+        }
+
+        function calcularTiempo() {
+            let R = parseFloat(document.getElementById("resistencia").value) * parseFloat(document.getElementById("unidad_resistencia").value);
+            let C = parseFloat(document.getElementById("capacitancia").value) * parseFloat(document.getElementById("unidad_capacitancia").value);
+            if (isNaN(R) || isNaN(C) || R <= 0 || C <= 0) {
+                alert("Ingrese valores válidos para R y C");
+                return;
+            }
+            let T = 1.1 * R * C;
+            document.getElementById("resultado").innerText = T.toFixed(6) + " s";
+            fetch("/valore", {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({modo: "1", pulso: T.toString()})
+            });
+        }
+
+        function calcularAstable() {
+            let R1 = parseFloat(document.getElementById("resistencia1").value);
+            let R2 = parseFloat(document.getElementById("resistencia2").value);
+            let C = parseFloat(document.getElementById("capacitanciaA").value);
+            if (isNaN(R1) || isNaN(R2) || isNaN(C) || R1 <= 0 || R2 <= 0 || C <= 0) {
+                alert("Ingrese valores válidos para R1, R2 y C");
+                return;
+            }
+            let frecuencia = 1.44 / ((R1 + 2 * R2) * C);
+            let cicloTrabajo = ((R1 + R2) / (R1 + 2 * R2)) * 100;
+            fetch("/valore", {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({modo: "2", frecuencia: frecuencia.toString(), duty: cicloTrabajo.toString()})
+            });
+            document.getElementById("frecuencia").innerText = frecuencia.toFixed(2) + " ";
+            document.getElementById("ciclo").innerText = cicloTrabajo.toFixed(2) + " ";
+        }
+
+        function calcularPWM() {
+            // Obtener valores de resistencias
+            let Rv = parseFloat(document.getElementById("resistenciaPWM").value) * parseFloat(document.getElementById("unidad_resistenciaPWM").value);
+            let Rf = parseFloat(document.getElementById("resistenciaFija").value) * parseFloat(document.getElementById("unidad_resistenciaFija").value);
+
+            // Obtener valor del capacitor fijo
+            let Cf = parseFloat(document.getElementById("capacitorFijo").value) * parseFloat(document.getElementById("unidad_capacitorFijo").value);
+
+            // Validar entradas
+            if (isNaN(Rv) || isNaN(Rf) || Rv <= 0 || Rf <= 0 || Cf <= 0) {
+                alert("Ingrese valores válidos para Rv, Rf y Cf");
+                return;
+            }
+
+            // Calcular frecuencia
+            let frecuencia = 1.44 / ((Rf + 2 * Rv) * Cf);
+
+            // Calcular ciclo de trabajo
+            let dutyCycle = (Rv / (Rv + Rf)) * 100;
+
+            // Mostrar resultados
+            document.getElementById("frecuenciaPWM").innerText = frecuencia.toFixed(2) + " Hz";
+            document.getElementById("dutyCycle").innerText = dutyCycle.toFixed(2) + " %";
+
+            fetch("/valore", {method: 'POST', headers: { 'Content-Type': 'application/json'}, 
+            body:JSON.stringify({ modo: "3", frecuencia: frecuencia.toString(), duty: dutyCycle.toString() })});
+        }
+    </script>
+</body>
+
+</html>
